@@ -1,8 +1,8 @@
 library(fmsb)
 library(scales)
-library(png)
-library(RCurl)
-library(patchwork)
+# library(png)
+# library(RCurl)
+# library(patchwork)
 
 # Constant
 wage_condition <- 200000
@@ -54,11 +54,10 @@ players_selected <- function(list_names) {
   return(v)
 }
 
-
-
 # Answer
 fifa22 <- read.csv("./DataSet/FIFA22.csv")
 colnames_fifa22 <- colnames(fifa22)
+
 
 # Đếm sô lượng cầu thủ của mỗi quốc gia
 # = print(table(fifa22$Nationality))
@@ -124,7 +123,7 @@ players_card <- fifa22[
 ]
 
 op <- par(mar = c(2, 3, 0, 3))
-compare_list <- c("De Gea")
+compare_list <- c("Cristiano Ronaldo", "L. Messi")
 
 
 player <- players_selected(compare_list)
@@ -174,3 +173,35 @@ legend(
 )
 
 par(op)
+
+#Cauhoi 2: Thống kê 10 CLB có tổng lương cầu thủ cao nhất
+club<-table(fifa22$Club)
+club<-data.frame(club)
+names(club)
+colnames(club)[which(names(club)=="Var1")]<-"Club"
+colnames(club)[which(names(club)=="Freq")]<-"Total Player"
+names(club)
+club_complete<-club[!(is.na(club$Club) | club$Club==""), ]
+club_complete$Club
+# club_complete<-subset(club_complete, select = -c(Wage) )
+for (club in club_complete$Club) {
+  find_clb <- fifa22[fifa22$Club == club,]
+  club_complete$Wage[club_complete["Club"]==club] <- sum(as.numeric(find_clb$Wage))
+}
+club_complete <-club_complete[order(-club_complete$Wage),]
+Top10Salary<- head(club_complete,10)
+par(mar=c(10,6,2,6))
+barplot(height=Top10Salary$Wage, names=Top10Salary$Club, 
+        col=rgb(0.2,0.4,0.6,0.6),
+        ylim=c(0,5000000),
+        ylab="Salary", 
+        main="Top 10 Salary", 
+        width= 0.025,
+        space= 1,
+        cex.axis=0.6,
+        cex.names=0.8,
+        las=2
+        )
+#Cauhoi 3: Đội hình 11 cầu thủ có chỉ số cao nhất ở từng vị trí BEST WORLD XI 
+#Cauhoi 4: Thống kê 10 Đội tuyển quốc gia có tổng giá trị cầu thủ cao nhất
+#Cauhoi 5: 
