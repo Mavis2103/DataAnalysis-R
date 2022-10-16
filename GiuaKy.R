@@ -57,7 +57,7 @@ players_selected <- function(list_names) {
 }
 
 # Answer
-fifa22 <- read.csv("DataSet/FIFA22.csv")
+fifa22 <- read.csv("C:\\Users\\ADMIN\\OneDrive - ddevlife\\Giaotrinh\\Nam4\\Ky1\\Data analysist\\Exam\\Mid\\DataAnalysis-R\\DataSet\\FIFA22.csv", encoding = 'utf8')
 colnames_fifa22 <- colnames(fifa22)
 
 # 1. Giải thích các biến (cột) trong dataset
@@ -138,10 +138,6 @@ fifa22$Wage[TRUE] <-
     ifelse(grepl("K", fifa22$Wage), "000", ""),
     sep = ""
   )
-#Format value of col Value €107.5M -> 107500000
-fifa22$Value <-
-  paste(as.numeric(regmatches(fifa22$Value, gregexpr("[[:digit:]]+\\.*[[:digit:]]*",fifa22$Value)))*1000000)
-
 # Những cầu thủ Wage > 200000
 rs_wage <- subset(fifa22, as.numeric(fifa22$Wage) > wage_condition)
 # = print(rs_wage)
@@ -279,13 +275,11 @@ barplot(height=Top10Salary$Wage, names=Top10Salary$Club,
 #Cauhoi 3: Đội hình 11 cầu thủ có chỉ số cao nhất ở từng vị trí BEST WORLD XI
 position <- table(fifa22$Best.Position)
 position <- data.frame(position)
-position
 colnames(position)[which(names(position)=="Var1")]<-"Position"
 position<-subset(position, select = -c(Freq) )
-# na<-fifa22[fifa22$Nationality == 'Netherlands',]
+
 for (pos in position$Position) {
-  player_by_position <- fifa22[fifa22$Best.Position == pos, ]
-  # player_by_position <- player_by_position[player_by_position$Nationality == 'England',]
+  player_by_position <- fifa22[fifa22$Best.Position == pos,]
   best_ovr_player_by_position <- player_by_position$Name[player_by_position$Overall == max(player_by_position$Overall)]
   best_ovr_player_photo_by_position <- player_by_position$Photo[player_by_position$Overall == max(player_by_position$Overall)]
   position$Player[position['Position'] == pos] <- best_ovr_player_by_position
@@ -301,7 +295,7 @@ Def <- c(playerByPos('LB'), playerByPos('CB'), playerByPos('RB'))
 Mf <- c(playerByPos('LM'), playerByPos('CDM'), playerByPos('CM'), playerByPos('RM'))
 St <- c(playerByPos('LW'), playerByPos('ST'), playerByPos('RW'))
 
-# position
+position
 #
 # length(GK) <- length(Mf)
 # length(Def) <- length(Mf)
@@ -317,7 +311,7 @@ ypos <- xpos
 data_frame = data.frame(xpos = xpos,
                         ypos = ypos)
 
-image <- "sanco.png"
+image <- "C:\\Users\\ADMIN\\OneDrive - ddevlife\\Giaotrinh\\Nam4\\Ky1\\Data analysist\\Exam\\Mid\\DataAnalysis-R\\Images\\pitch.png"
 
 pitch <- readPNG(image, native = TRUE)
 # plotting the data
@@ -325,16 +319,15 @@ graph <- ggplot(data_frame, aes(xpos, ypos)) + geom_point()
 test <- function() {
   player_photo <- vector('list', 2)
   i <- 1
- pos <- array(
-       c(c(x=225, y=40),
-         c(x=95 , y=130),
+ pos <- array(c(c(x=225, y=40),
+         c(x=95, y=130),
          c(x=225, y=110),
          c(x=355, y=130),
-         c(x=25 , y=290),
+         c(x=25, y=290),
          c(x=145, y=210),
          c(x=305, y=240),
          c(x=425, y=290),
-         c(x=75 , y=390),
+         c(x=75, y=390),
          c(x=225, y=440),
          c(x=375, y=390)), dim = c(2,11))
     for (url in BEST_WORLD_XI) {
@@ -343,44 +336,48 @@ test <- function() {
     }
   return(player_photo)
 }
+test()
 
 pitchh_graph <- graph + annotation_raster(pitch, xmin=0, xmax=500, ymin=0, ymax=500) + test()
-pitchh_graph + 
-  geom_text(x=250, y=30 , label='GK' , size=8) +
-  geom_text(x=120, y=120, label='CB' , size=8) +
-  geom_text(x=250, y=100, label='CB' , size=8) +
-  geom_text(x=380, y=120, label='CB' , size=8) +
-  geom_text(x=50 , y=280, label='LM' , size=8) +
+pitchh_graph + geom_text(x=250, y=30, label='GK', size=8) +
+  geom_text(x=120, y=120, label='CB', size=8) +
+  geom_text(x=250, y=100, label='CB', size=8) +
+  geom_text(x=380, y=120, label='CB', size=8) +
+  geom_text(x=50, y=280, label='LM', size=8) +
   geom_text(x=170, y=200, label='CDM', size=8) +
-  geom_text(x=330, y=230, label='CM' , size=8) +
-  geom_text(x=450, y=280, label='RM' , size=8) +
-  geom_text(x=100, y=380, label='LW' , size=8) +
-  geom_text(x=250, y=430, label='ST' , size=8) +
-  geom_text(x=400, y=380, label='RW' , size=8)
+  geom_text(x=330, y=230, label='CM', size=8) +
+  geom_text(x=450, y=280, label='RM', size=8) +
+  geom_text(x=100, y=380, label='LW', size=8) +
+  geom_text(x=250, y=430, label='ST', size=8) +
+  geom_text(x=400, y=380, label='RW', size=8)
 
 
 #Cauhoi 4: Thống kê 10 Đội tuyển quốc gia có tổng giá trị cầu thủ cao nhất
-
-national_team<-table(fifa22$Nationality)
-national_team<-data.frame(national_team)
-colnames(national_team)[which(names(national_team)=="Var1")]<-"National_team"
-for (team in national_team$National_team) {
-  find_team <- fifa22[fifa22$Nationality == team,]
-  national_team$Value[national_team["National_team"]==team] <- sum(as.numeric(find_team$Value))
-}
-national_team <-national_team[order(-national_team$Value),]
-Top10Value<- head(national_team,10)
-par(mar=c(10,6,2,6))
-barplot(height=Top10Value$Value, names=Top10Value$National_team,
-        col=rgb(0.2,0.4,0.6,0.6),
-        ylim=c(0,600000000000),
-        ylab="Value",
-        main="Top 10 Value",
-        width= 0.025,
-        space= 1,
-        cex.axis=0.6,
-        cex.names=0.8,
-        las=2
-        )
+# national_team<-table(fifa22$Nationality)
+# national_team<-data.frame(national_team)
+# colnames(national_team)[which(names(national_team)=="Var1")]<-"National team"
+# # colnames(national_team)[which(names(national_team)=="Freq")]<-"Total Player"
+# # names(club)
+# national_team_complete<-national_team[!(is.na(national_team$Club) | club$Club==""), ]
+# club_complete$Club
+# # club_complete<-subset(club_complete, select = -c(Wage) )
+# for (club in club_complete$Club) {
+#   find_clb <- fifa22[fifa22$Club == club,]
+#   club_complete$Wage[club_complete["Club"]==club] <- sum(as.numeric(find_clb$Wage))
+# }
+# club_complete <-club_complete[order(-club_complete$Wage),]
+# Top10Salary<- head(club_complete,10)
+# par(mar=c(10,6,2,6))
+# barplot(height=Top10Salary$Wage, names=Top10Salary$Club,
+#         col=rgb(0.2,0.4,0.6,0.6),
+#         ylim=c(0,5000000),
+#         ylab="Salary",
+#         main="Top 10 Salary",
+#         width= 0.025,
+#         space= 1,
+#         cex.axis=0.6,
+#         cex.names=0.8,
+#         las=2
+#         )
 
 #Cauhoi 5: 
