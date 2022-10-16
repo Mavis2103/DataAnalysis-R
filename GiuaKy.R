@@ -138,6 +138,13 @@ fifa22$Wage[TRUE] <-
     ifelse(grepl("K", fifa22$Wage), "000", ""),
     sep = ""
   )
+
+# Format value of Value col €107.5M -> 107.5
+fifa22$Value[TRUE] <-
+  paste(regmatches(fifa22$Value, regexpr("\\d*\\.?\\d+", fifa22$Value)),
+    ifelse(grepl("M", fifa22$Value), "", ""),
+    sep = ""
+  )
 # Những cầu thủ Wage > 200000
 rs_wage <- subset(fifa22, as.numeric(fifa22$Wage) > wage_condition)
 # = print(rs_wage)
@@ -180,7 +187,8 @@ fifa22$Physical <-
 players_card <- fifa22[
   ,
   c(
-    "ID", "Name", "Age", "Photo",
+    "Name", "Age", "Photo",
+    # "ID", "Name", "Age", "Photo",
     "Nationality", "Flag", "Club",
     "Club.Logo",
     "Overall",
@@ -353,31 +361,32 @@ pitchh_graph + geom_text(x=250, y=30, label='GK', size=8) +
 
 
 #Cauhoi 4: Thống kê 10 Đội tuyển quốc gia có tổng giá trị cầu thủ cao nhất
-# national_team<-table(fifa22$Nationality)
-# national_team<-data.frame(national_team)
-# colnames(national_team)[which(names(national_team)=="Var1")]<-"National team"
-# # colnames(national_team)[which(names(national_team)=="Freq")]<-"Total Player"
-# # names(club)
-# national_team_complete<-national_team[!(is.na(national_team$Club) | club$Club==""), ]
-# club_complete$Club
-# # club_complete<-subset(club_complete, select = -c(Wage) )
-# for (club in club_complete$Club) {
-#   find_clb <- fifa22[fifa22$Club == club,]
-#   club_complete$Wage[club_complete["Club"]==club] <- sum(as.numeric(find_clb$Wage))
-# }
-# club_complete <-club_complete[order(-club_complete$Wage),]
-# Top10Salary<- head(club_complete,10)
-# par(mar=c(10,6,2,6))
-# barplot(height=Top10Salary$Wage, names=Top10Salary$Club,
-#         col=rgb(0.2,0.4,0.6,0.6),
-#         ylim=c(0,5000000),
-#         ylab="Salary",
-#         main="Top 10 Salary",
-#         width= 0.025,
-#         space= 1,
-#         cex.axis=0.6,
-#         cex.names=0.8,
-#         las=2
-#         )
+national_team<-table(fifa22$Nationality)
+national_team<-data.frame(national_team)
+colnames(national_team)[which(names(national_team)=="Var1")]<-"National_team"
+national_team_complete<-subset(national_team, select = -c(Freq) )
+
+national_team_complete<-national_team[!(is.na(national_team$National_team) | national_team$National_team==""), ]
+for (nt in national_team_complete$National_team) {
+  find_national_team <- fifa22[fifa22$Nationality == nt,]
+  find_national_team
+  total_value <- sum(as.numeric(find_national_team$Value))
+  national_team_complete$Total_value[national_team_complete["National_team"]==nt] <- total_value
+}
+national_team_complete <-national_team_complete[order(-national_team_complete$Total_value),]
+Top10Value<- head(national_team_complete,10)
+Top10Value
+par(mar=c(10,6,2,6))
+barplot(height=Top10Value$Total_value, names=Top10Value$National_team,
+        col=rgb(0.2,0.4,0.6,0.6),
+        ylim=c(0,600000),
+        ylab="Value",
+        main="Top 10 National team value",
+        width= 0.025,
+        space= 1,
+        cex.axis=0.6,
+        cex.names=0.8,
+        las=2
+        )
 
 #Cauhoi 5: 
