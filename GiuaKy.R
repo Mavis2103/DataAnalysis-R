@@ -57,7 +57,8 @@ players_selected <- function(list_names) {
 }
 
 # Answer
-fifa22 <- read.csv("C:\\Users\\ADMIN\\OneDrive - ddevlife\\Giaotrinh\\Nam4\\Ky1\\Data analysist\\Exam\\Mid\\DataAnalysis-R\\DataSet\\FIFA22.csv", encoding = 'utf8')
+fifa22 <- read.csv("DataSet/FIFA22.csv")
+# fifa22 <- read.csv("C:\\Users\\ADMIN\\OneDrive - ddevlife\\Giaotrinh\\Nam4\\Ky1\\Data analysist\\Exam\\Mid\\DataAnalysis-R\\DataSet\\FIFA22.csv", encoding = 'utf8')
 colnames_fifa22 <- colnames(fifa22)
 
 # 1. Giải thích các biến (cột) trong dataset
@@ -187,8 +188,7 @@ fifa22$Physical <-
 players_card <- fifa22[
   ,
   c(
-    "Name", "Age", "Photo",
-    # "ID", "Name", "Age", "Photo",
+    "ID", "Name", "Age", "Photo",
     "Nationality", "Flag", "Club",
     "Club.Logo",
     "Overall",
@@ -288,6 +288,7 @@ position<-subset(position, select = -c(Freq) )
 
 for (pos in position$Position) {
   player_by_position <- fifa22[fifa22$Best.Position == pos,]
+  # player_by_position <- player_by_position[player_by_position$Nationality == 'England',]
   best_ovr_player_by_position <- player_by_position$Name[player_by_position$Overall == max(player_by_position$Overall)]
   best_ovr_player_photo_by_position <- player_by_position$Photo[player_by_position$Overall == max(player_by_position$Overall)]
   position$Player[position['Position'] == pos] <- best_ovr_player_by_position
@@ -319,7 +320,8 @@ ypos <- xpos
 data_frame = data.frame(xpos = xpos,
                         ypos = ypos)
 
-image <- "C:\\Users\\ADMIN\\OneDrive - ddevlife\\Giaotrinh\\Nam4\\Ky1\\Data analysist\\Exam\\Mid\\DataAnalysis-R\\Images\\pitch.png"
+image <- "Images/pitch.png"
+# image <- "C:\\Users\\ADMIN\\OneDrive - ddevlife\\Giaotrinh\\Nam4\\Ky1\\Data analysist\\Exam\\Mid\\DataAnalysis-R\\Images\\pitch.png"
 
 pitch <- readPNG(image, native = TRUE)
 # plotting the data
@@ -344,10 +346,10 @@ test <- function() {
     }
   return(player_photo)
 }
-test()
 
 pitchh_graph <- graph + annotation_raster(pitch, xmin=0, xmax=500, ymin=0, ymax=500) + test()
-pitchh_graph + geom_text(x=250, y=30, label='GK', size=8) +
+pitchh_graph +
+  geom_text(x=250, y=30, label='GK', size=8) +
   geom_text(x=120, y=120, label='CB', size=8) +
   geom_text(x=250, y=100, label='CB', size=8) +
   geom_text(x=380, y=120, label='CB', size=8) +
