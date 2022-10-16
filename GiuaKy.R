@@ -403,18 +403,18 @@ getPlayerPhoto <- function() {
 pitchh_graph <- graph + annotation_raster(pitch, xmin=0, xmax=500, ymin=0, ymax=500) + getPlayerPhoto()
 # Thêm chữ vị trí của mỗi cầu thủ theo từng vị trí
 pitchh_graph +
-  geom_text(x=250, y=30 , label='GK' , size=8) +
-  geom_text(x=120, y=120, label='CB' , size=8) +
-  geom_text(x=250, y=100, label='CB' , size=8) +
-  geom_text(x=380, y=120, label='CB' , size=8) +
-  geom_text(x=50 , y=280, label='LM' , size=8) +
-  geom_text(x=170, y=200, label='CDM', size=8) +
-  geom_text(x=330, y=230, label='CM' , size=8) +
-  geom_text(x=450, y=280, label='RM' , size=8) +
-  geom_text(x=100, y=380, label='LW' , size=8) +
-  geom_text(x=250, y=430, label='ST' , size=8) +
-  geom_text(x=400, y=380, label='RW' , size=8) +
-  geom_text(x=250, y=510, label='BEST WORLD XI' , size=8)
+  geom_text(x=250, y=30 , label='GK' , size=8, col=rgb(1,1,0,1)) +
+  geom_text(x=120, y=120, label='CB' , size=8, col=rgb(0,0,1,1)) +
+  geom_text(x=250, y=100, label='CB' , size=8, col=rgb(0,0,1,1)) +
+  geom_text(x=380, y=120, label='CB' , size=8, col=rgb(0,0,1,1)) +
+  geom_text(x=50 , y=280, label='LM' , size=8, col=rgb(0,1,0,1)) +
+  geom_text(x=170, y=200, label='CDM', size=8, col=rgb(0,1,0,1)) +
+  geom_text(x=330, y=230, label='CM' , size=8, col=rgb(0,1,0,1)) +
+  geom_text(x=450, y=280, label='RM' , size=8, col=rgb(0,1,0,1)) +
+  geom_text(x=100, y=380, label='LW' , size=8, col=rgb(1,0,0,1)) +
+  geom_text(x=250, y=430, label='ST' , size=8, col=rgb(1,0,0,1)) +
+  geom_text(x=400, y=380, label='RW' , size=8, col=rgb(1,0,0,1)) +
+  geom_text(x=250, y=510, label='BEST WORLD XI' , size=8, col=rgb(0.855,0.647,0.125,1))
 
 #Cauhoi 4: Thống kê 10 Đội tuyển quốc gia có tổng giá trị cầu thủ cao nhất
 # Tạo bảng national_team lấy từ cột "Nationality" ở fifa22 dataframe
