@@ -141,11 +141,8 @@ fifa22$Wage[TRUE] <-
   )
 
 # Format value of Value col €107.5M -> 107.5
-fifa22$Value[TRUE] <-
-  paste(regmatches(fifa22$Value, regexpr("\\d*\\.?\\d+", fifa22$Value)),
-    ifelse(grepl("M", fifa22$Value), "", ""),
-    sep = ""
-  )
+fifa22$Value <-
+  paste(as.numeric(regmatches(fifa22$Value, gregexpr("[[:digit:]]+\\.*[[:digit:]]*",fifa22$Value))))
 # Những cầu thủ Wage > 200000
 rs_wage <- subset(fifa22, as.numeric(fifa22$Wage) > wage_condition)
 # = print(rs_wage)
@@ -255,12 +252,12 @@ par(op)
 #Cauhoi 2: Thống kê 10 CLB có tổng lương cầu thủ cao nhất
 club<-table(fifa22$Club)
 club<-data.frame(club)
-names(club)
+# names(club)
 colnames(club)[which(names(club)=="Var1")]<-"Club"
 colnames(club)[which(names(club)=="Freq")]<-"Total Player"
-names(club)
+# names(club)
 club_complete<-club[!(is.na(club$Club) | club$Club==""), ]
-club_complete$Club
+# club_complete$Club
 # club_complete<-subset(club_complete, select = -c(Wage) )
 for (club in club_complete$Club) {
   find_clb <- fifa22[fifa22$Club == club,]
@@ -280,6 +277,7 @@ barplot(height=Top10Salary$Wage, names=Top10Salary$Club,
         cex.names=0.8,
         las=2
         )
+
 #Cauhoi 3: Đội hình 11 cầu thủ có chỉ số cao nhất ở từng vị trí BEST WORLD XI
 position <- table(fifa22$Best.Position)
 position <- data.frame(position)
@@ -294,8 +292,8 @@ for (pos in position$Position) {
   position$Player[position['Position'] == pos] <- best_ovr_player_by_position
   position$Photo[position['Position'] == pos] <- best_ovr_player_photo_by_position
 }
-
 position
+
 playerByPos <- function(pos) {
   return(position$Photo[position$Position == pos])
 }
@@ -304,11 +302,7 @@ Def <- c(playerByPos('LB'), playerByPos('CB'), playerByPos('RB'))
 Mf <- c(playerByPos('LM'), playerByPos('CDM'), playerByPos('CM'), playerByPos('RM'))
 St <- c(playerByPos('LW'), playerByPos('ST'), playerByPos('RW'))
 
-position
-#
-# length(GK) <- length(Mf)
-# length(Def) <- length(Mf)
-# length(St) <- length(Mf)
+
 BEST_WORLD_XI <- c(GK, Def, Mf, St)
 
 # defining the x coordinates
@@ -320,9 +314,7 @@ ypos <- xpos
 data_frame = data.frame(xpos = xpos,
                         ypos = ypos)
 
-image <- "Images/pitch.png"
-# image <- "C:\\Users\\ADMIN\\OneDrive - ddevlife\\Giaotrinh\\Nam4\\Ky1\\Data analysist\\Exam\\Mid\\DataAnalysis-R\\Images\\pitch.png"
-
+image <- "sanco.png"
 pitch <- readPNG(image, native = TRUE)
 # plotting the data
 graph <- ggplot(data_frame, aes(xpos, ypos)) + geom_point()
@@ -349,17 +341,18 @@ test <- function() {
 
 pitchh_graph <- graph + annotation_raster(pitch, xmin=0, xmax=500, ymin=0, ymax=500) + test()
 pitchh_graph +
-  geom_text(x=250, y=30, label='GK', size=8) +
-  geom_text(x=120, y=120, label='CB', size=8) +
-  geom_text(x=250, y=100, label='CB', size=8) +
-  geom_text(x=380, y=120, label='CB', size=8) +
-  geom_text(x=50, y=280, label='LM', size=8) +
+  geom_text(x=250, y=30 , label='GK' , size=8) +
+  geom_text(x=120, y=120, label='CB' , size=8) +
+  geom_text(x=250, y=100, label='CB' , size=8) +
+  geom_text(x=380, y=120, label='CB' , size=8) +
+  geom_text(x=50 , y=280, label='LM' , size=8) +
   geom_text(x=170, y=200, label='CDM', size=8) +
-  geom_text(x=330, y=230, label='CM', size=8) +
-  geom_text(x=450, y=280, label='RM', size=8) +
-  geom_text(x=100, y=380, label='LW', size=8) +
-  geom_text(x=250, y=430, label='ST', size=8) +
-  geom_text(x=400, y=380, label='RW', size=8)
+  geom_text(x=330, y=230, label='CM' , size=8) +
+  geom_text(x=450, y=280, label='RM' , size=8) +
+  geom_text(x=100, y=380, label='LW' , size=8) +
+  geom_text(x=250, y=430, label='ST' , size=8) +
+  geom_text(x=400, y=380, label='RW' , size=8) +
+  geom_text(x=250, y=510, label='BEST WORLD XI' , size=8)
 
 
 #Cauhoi 4: Thống kê 10 Đội tuyển quốc gia có tổng giá trị cầu thủ cao nhất
@@ -368,12 +361,10 @@ national_team<-data.frame(national_team)
 colnames(national_team)[which(names(national_team)=="Var1")]<-"National_team"
 national_team_complete<-subset(national_team, select = -c(Freq) )
 
-national_team_complete<-national_team[!(is.na(national_team$National_team) | national_team$National_team==""), ]
 for (nt in national_team_complete$National_team) {
   find_national_team <- fifa22[fifa22$Nationality == nt,]
-  find_national_team
-  total_value <- sum(as.numeric(find_national_team$Value))
-  national_team_complete$Total_value[national_team_complete["National_team"]==nt] <- total_value
+  national_team_complete$Total_value[national_team_complete["National_team"]==nt] <- 
+    sum(as.numeric(find_national_team$Value))
 }
 national_team_complete <-national_team_complete[order(-national_team_complete$Total_value),]
 Top10Value<- head(national_team_complete,10)
